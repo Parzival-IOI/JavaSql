@@ -10,6 +10,9 @@ public class SqlStatement {
     private final String SelectAllQuery;
     private final String SelectOneQuery;
     private final String InsertQuery;
+    private final String UpdateQuery;
+    private final String DeleteQuery;
+
     public SqlStatement() throws SQLException {
             connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/Parzival",
@@ -19,6 +22,8 @@ public class SqlStatement {
             this.SelectAllQuery = "SELECT * FROM Testing";
             this.SelectOneQuery = "SELECT * FROM Testing WHERE id = ?";
             this.InsertQuery = "INSERT INTO Testing(id, name, description) VALUES(?,?,?)";
+            this.UpdateQuery = "UPDATE Testing SET name = ?, description = ? WHERE id = ?";
+            this.DeleteQuery = "DELETE FROM Testing WHERE id = ?";
 
             System.out.println("Successfully Connected to Database");
     }
@@ -34,10 +39,10 @@ public class SqlStatement {
     }
 
     public void SelectOne(int id) throws SQLException {
-            PreparedStatement preparedStatement = connection.prepareStatement(this.SelectOneQuery);
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            this.printRow(resultSet);
+        PreparedStatement preparedStatement = connection.prepareStatement(this.SelectOneQuery);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        this.printRow(resultSet);
     }
 
     public void Insert(int id, String name, String description) throws SQLException {
@@ -49,13 +54,28 @@ public class SqlStatement {
         preparedStatement.executeUpdate();
     }
 
+    public void Update(int id, String name, String description) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(this.UpdateQuery);
+        preparedStatement.setString(1, name);
+        preparedStatement.setString(2, description);
+        preparedStatement.setInt(3, id);
+
+        preparedStatement.executeUpdate();
+    }
+
+    public void Delete(int id) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(this.DeleteQuery);
+        preparedStatement.setInt(1, id);
+        preparedStatement.executeUpdate();
+    }
+
     private void printRow(ResultSet resultset) throws SQLException {
         ResultSetMetaData resultSetMetaData = resultset.getMetaData();
         int count = resultSetMetaData.getColumnCount();
         for (int i = 1; i <= count; i++) {
             System.out.print("|" + resultSetMetaData.getColumnName(i) + "|");
         }
-        System.out.println();
+        System.out.println("\n");
         while (resultset.next()) {
             for (int i = 1; i <= count; i++) {
                 System.out.print("|" + resultset.getString(i) + "|");
