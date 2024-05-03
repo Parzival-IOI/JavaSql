@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class SqlStatement {
     private final Connection connection;
@@ -30,6 +31,13 @@ public class SqlStatement {
 
     public void closeConnection() throws SQLException {
         this.connection.close();
+    }
+
+    public void SelectAllCreateStatement() throws SQLException {
+        Statement stmt = connection.createStatement();
+        String SelectAllQuery = "SELECT * FROM Testing";
+        ResultSet rs = stmt.executeQuery(SelectAllQuery);
+        printRow(rs);
     }
 
     public void SelectAll() throws SQLException {

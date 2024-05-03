@@ -1,0 +1,10 @@
+-> Content for this video
+
++ Create MySQL Container in Docker
++ Download MySQL ":jbdc" Driver
++ Connect to database
++ Run Create table statement
++ Insert data into table
++ Select data from table
++ Print out data from ResultSet
++ Using Prepare Statement
